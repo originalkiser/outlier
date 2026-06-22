@@ -1,9 +1,10 @@
 import { useState } from 'react'
-import { UserPlus, X, Check, Ban, RefreshCw } from 'lucide-react'
+import { UserPlus, X, Check, Ban, Upload } from 'lucide-react'
 import { UserProfile, UserRole } from '../../types'
 import { supabase } from '../../lib/supabase'
 import toast from 'react-hot-toast'
 import { format, parseISO } from 'date-fns'
+import BulkUserImport from './BulkUserImport'
 
 interface Props {
   users: UserProfile[]
@@ -30,6 +31,7 @@ function getStatus(user: UserProfile): { label: string; color: string } {
 
 export default function UserManagement({ users, onRefresh }: Props) {
   const [showAdd, setShowAdd] = useState(false)
+  const [showBulk, setShowBulk] = useState(false)
   const [form, setForm] = useState({
     work_email: '', full_name: '', role: 'department' as UserRole,
     region: '', area: '', password: '',
@@ -91,14 +93,31 @@ export default function UserManagement({ users, onRefresh }: Props) {
     <div>
       <div className="flex items-center justify-between mb-4">
         <h2 className="font-brand font-bold text-sb-cream tracking-widest text-[13px] uppercase">User Management</h2>
-        <button
-          onClick={() => setShowAdd(true)}
-          className="flex items-center gap-2 bg-sb-sky text-sb-navy font-brand font-bold text-[12px] tracking-wider px-3 py-2 rounded hover:brightness-105 transition"
-        >
-          <UserPlus size={14} />
-          ADD USER
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setShowBulk(true)}
+            className="flex items-center gap-2 bg-sb-inky/40 text-sb-cream font-brand font-bold text-[12px] tracking-wider px-3 py-2 rounded border border-sb-inky hover:bg-sb-inky/60 transition"
+          >
+            <Upload size={14} />
+            IMPORT USERS
+          </button>
+          <button
+            onClick={() => setShowAdd(true)}
+            className="flex items-center gap-2 bg-sb-sky text-sb-navy font-brand font-bold text-[12px] tracking-wider px-3 py-2 rounded hover:brightness-105 transition"
+          >
+            <UserPlus size={14} />
+            ADD USER
+          </button>
+        </div>
       </div>
+
+      {showBulk && (
+        <BulkUserImport
+          existingEmails={new Set(users.map(u => u.work_email))}
+          onClose={() => setShowBulk(false)}
+          onDone={() => { setShowBulk(false); onRefresh() }}
+        />
+      )}
 
       {/* Add User Modal */}
       {showAdd && (
