@@ -57,7 +57,7 @@ export default function Sidebar({ departments, reports, realtimeConnected }: Sid
       {/* Logo */}
       <div className="flex items-center justify-center px-4 py-5 border-b border-sb-inky/30">
         <img
-          src="/logos/SBOC-Primary-Sky.png"
+          src={`${import.meta.env.BASE_URL}logos/SBOC-Primary-Sky.png`}
           alt="Strickland Brothers"
           className="h-12 object-contain"
         />

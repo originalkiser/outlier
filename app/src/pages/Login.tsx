@@ -69,7 +69,7 @@ export default function Login() {
 
           {/* Logo */}
           <div className="flex justify-center mb-6">
-            <img src="/logos/SBOC-Primary-Sky.png" alt="Strickland Brothers" className="h-16 object-contain" />
+            <img src={`${import.meta.env.BASE_URL}logos/SBOC-Primary-Sky.png`} alt="Strickland Brothers" className="h-16 object-contain" />
           </div>
 
           {/* Wordmark */}

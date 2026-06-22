@@ -60,7 +60,7 @@ export default function AuthCallback() {
 
   return (
     <div className="min-h-screen bg-sb-navy flex flex-col items-center justify-center gap-6">
-      <img src="/logos/SBOC-Primary-Sky.png" alt="Strickland Brothers" className="h-16 object-contain" />
+      <img src={`${import.meta.env.BASE_URL}logos/SBOC-Primary-Sky.png`} alt="Strickland Brothers" className="h-16 object-contain" />
       <div className="w-10 h-10 rounded-full border-2 border-sb-sky border-t-transparent animate-spin" />
       <p className="font-mono text-sb-cream/60 text-[13px]">{status}</p>
     </div>
