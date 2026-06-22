@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 
 function MicrosoftIcon() {
@@ -16,6 +16,7 @@ function MicrosoftIcon() {
 export default function Login() {
   const { signInWithMicrosoft, signInWithPassword } = useAuth()
   const location = useLocation()
+  const navigate = useNavigate()
   const params = new URLSearchParams(location.search)
   const errorParam = params.get('error')
 
@@ -45,6 +46,8 @@ export default function Login() {
       } else {
         setError(result.error)
       }
+    } else {
+      navigate('/')
     }
   }
 
