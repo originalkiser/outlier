@@ -73,7 +73,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   async function signInWithPassword(email: string, password: string): Promise<{ error: string | null }> {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password })
-    if (error) return { error: error.message }
+    if (error) return { error: error.message || 'Invalid email or password.' }
 
     if (data.user) {
       const p = await loadProfile(data.user.id)
