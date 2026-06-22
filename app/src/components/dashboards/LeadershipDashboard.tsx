@@ -49,14 +49,24 @@ export default function LeadershipDashboard({ departments, reports, entriesByRep
       </div>
 
       {/* Reports by department */}
-      {departments.map(dept => {
-        const deptReports = reports.filter(r => r.department_id === dept.id)
-        if (deptReports.length === 0) return null
+      {[
+        ...departments.map(dept => ({
+          id: dept.id,
+          label: dept.name,
+          rpts: reports.filter(r => r.department_id === dept.id),
+        })),
+        {
+          id: '__unassigned__',
+          label: 'All Reports',
+          rpts: reports.filter(r => !r.department_id),
+        },
+      ].filter(g => g.rpts.length > 0).map(group => {
+        const { id: groupId, label: groupLabel, rpts: deptReports } = group
 
         return (
-          <div key={dept.id}>
+          <div key={groupId}>
             <h2 className="font-brand font-bold text-sb-sky tracking-widest text-[12px] uppercase mb-3 border-b border-sb-inky/30 pb-2">
-              {dept.name}
+              {groupLabel}
             </h2>
             <div className="space-y-2">
               {deptReports.map(report => {

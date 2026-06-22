@@ -24,7 +24,7 @@ export default function Sidebar({ departments, reports, realtimeConnected }: Sid
   const role = profile?.role
 
   const [expandedDepts, setExpandedDepts] = useState<Set<string>>(
-    new Set(DEPT_ORDER)
+    new Set([...DEPT_ORDER, '__unassigned__'])
   )
   const [customStartInput, setCustomStartInput] = useState('')
   const [customEndInput, setCustomEndInput] = useState('')
@@ -101,6 +101,7 @@ export default function Sidebar({ departments, reports, realtimeConnected }: Sid
             .filter(r => r.department_id === dept.id)
             .sort((a, b) => a.sort_order - b.sort_order)
 
+          if (deptReports.length === 0) return null
           const expanded = expandedDepts.has(dept.slug)
 
           return (
@@ -119,32 +120,42 @@ export default function Sidebar({ departments, reports, realtimeConnected }: Sid
               </button>
 
               {expanded && deptReports.map(report => (
-                <NavLink
-                  key={report.id}
-                  to={`/report/${report.slug}`}
-                  className={({ isActive }) =>
-                    `flex items-center gap-2 pl-8 pr-4 py-1.5 text-left transition-colors border-l-2 ${
-                      isActive
-                        ? 'border-sb-sky text-sb-sky bg-sb-inky/20'
-                        : 'border-transparent text-sb-cream/80 hover:text-sb-cream hover:bg-sb-inky/10'
-                    }`
-                  }
-                >
-                  {report.is_employee_report
-                    ? <UserIcon size={11} className="shrink-0 opacity-60" />
-                    : <Truck size={11} className="shrink-0 opacity-60" />
-                  }
-                  <span className="font-brand text-[11px] font-bold tracking-wide leading-tight">
-                    {report.name}
-                  </span>
-                </NavLink>
+                <ReportNavLink key={report.id} report={report} />
               ))}
             </div>
           )
         })}
 
-        {/* Empty state if no reports loaded yet */}
-        {departments.length === 0 && (
+        {/* Unassigned reports (department_id is null) */}
+        {(() => {
+          const unassigned = reports
+            .filter(r => !r.department_id)
+            .sort((a, b) => a.sort_order - b.sort_order)
+          if (unassigned.length === 0) return null
+          const expanded = expandedDepts.has('__unassigned__')
+          return (
+            <div>
+              <button
+                onClick={() => toggleDept('__unassigned__')}
+                className="w-full flex items-center justify-between px-4 py-1.5 text-left group"
+              >
+                <span className="font-mono text-[10px] text-sb-sky tracking-[0.15em] uppercase font-medium">
+                  All Reports
+                </span>
+                {expanded
+                  ? <ChevronDown size={11} className="text-sb-inky" />
+                  : <ChevronRight size={11} className="text-sb-inky" />
+                }
+              </button>
+              {expanded && unassigned.map(report => (
+                <ReportNavLink key={report.id} report={report} />
+              ))}
+            </div>
+          )
+        })()}
+
+        {/* Skeleton while loading */}
+        {reports.length === 0 && (
           <div className="px-4 py-3">
             <div className="h-3 bg-sb-inky/30 rounded mb-2 w-20" />
             <div className="h-2 bg-sb-inky/20 rounded mb-1.5 w-32" />
@@ -220,6 +231,27 @@ export default function Sidebar({ departments, reports, realtimeConnected }: Sid
         </div>
       </div>
     </aside>
+  )
+}
+
+function ReportNavLink({ report }: { report: Report }) {
+  return (
+    <NavLink
+      to={`/report/${report.slug}`}
+      className={({ isActive }) =>
+        `flex items-center gap-2 pl-8 pr-4 py-1.5 text-left transition-colors border-l-2 ${
+          isActive
+            ? 'border-sb-sky text-sb-sky bg-sb-inky/20'
+            : 'border-transparent text-sb-cream/80 hover:text-sb-cream hover:bg-sb-inky/10'
+        }`
+      }
+    >
+      {report.is_employee_report
+        ? <UserIcon size={11} className="shrink-0 opacity-60" />
+        : <Truck size={11} className="shrink-0 opacity-60" />
+      }
+      <span className="font-brand text-[11px] font-bold tracking-wide leading-tight">{report.name}</span>
+    </NavLink>
   )
 }
 

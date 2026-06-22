@@ -54,20 +54,25 @@ export default function DepartmentCompletion({ reports, entriesByReport }: Props
               )}
             </div>
 
-            {/* Progress bar */}
-            <div className="h-2 bg-sb-navy rounded-full overflow-hidden mb-2">
-              <div
-                className="h-full bg-sb-sky rounded-full transition-all duration-300"
-                style={{ width: `${pct}%` }}
-              />
-            </div>
-
-            <div className="flex items-center justify-between">
-              <span className="font-mono text-[11px] text-sb-cream/60">
-                {complete} / {total} complete
-              </span>
-              <span className="font-mono text-[12px] text-sb-sky font-medium">{pct}%</span>
-            </div>
+            {total === 0 ? (
+              <div className="flex items-center gap-2 mt-1">
+                <div className="w-1.5 h-1.5 rounded-full bg-sb-inky/60" />
+                <span className="font-mono text-[11px] text-sb-inky tracking-wide uppercase">Not submitted this week</span>
+              </div>
+            ) : (
+              <>
+                <div className="h-2 bg-sb-navy rounded-full overflow-hidden mb-2">
+                  <div
+                    className="h-full bg-sb-sky rounded-full transition-all duration-300"
+                    style={{ width: `${pct}%` }}
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="font-mono text-[11px] text-sb-cream/60">{complete} / {total} complete</span>
+                  <span className="font-mono text-[12px] text-sb-sky font-medium">{pct}%</span>
+                </div>
+              </>
+            )}
           </button>
         )
       })}
