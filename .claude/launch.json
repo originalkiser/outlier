@@ -1,0 +1,13 @@
+﻿{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "outlieros-dev",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "cwd": "app",
+      "port": 5174,
+      "autoPort": false
+    }
+  ]
+}
