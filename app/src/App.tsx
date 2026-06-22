@@ -9,6 +9,7 @@ import ReportView from './pages/ReportView'
 import AMDashboardPage from './pages/AMDashboardPage'
 import Leadership from './pages/Leadership'
 import Admin from './pages/Admin'
+import UpdateBanner from './components/shared/UpdateBanner'
 
 function ProtectedRoute({ children, roles }: { children: React.ReactNode; roles?: string[] }) {
   const { user, profile, loading } = useAuth()
@@ -96,6 +97,7 @@ export default function App() {
       <WeekProvider>
         <HashRouter>
           <AppRoutes />
+          <UpdateBanner />
         </HashRouter>
       </WeekProvider>
     </AuthProvider>
